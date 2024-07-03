@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+
+datasource db {
+  provider = "mysql"
+  url      = env("mysql://root:@localhost:3306/RFID")
+}
+
+
+
+model User {
+  id        Int     @id @default(autoincrement())
+  firstName String
+  lastName  String
+  email     String  @unique
+  phone     String
+  uid       String  @unique
+  cards     Card[]
+}
+
+
+
+model Card {
+  id       Int       @id @default(autoincrement())
+  cardId   String    @unique
+  userId   Int
+  user     User      @relation(fields: [userId], references: [id])
+  sessions Session[] @relation("CardSessions")
+}
+
+
+
+model Session {
+  id             Int      @id @default(autoincrement())
+  sessionId      String   @default(dbgenerated("(floor(random() * 9000) + 1000)::text"))
+  isAuth         Boolean  @default(false)
+  loginAt        DateTime @default(now())
+  logoutAt       DateTime?
+  cardId         Int
+  card           Card     @relation(fields: [cardId], references: [id], name: "CardSessions")
+}
