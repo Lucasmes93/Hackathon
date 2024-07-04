@@ -6,7 +6,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("mysql://root:@localhost:3306/RFID")
+  url      = env("https://scannfc.documents.azure.com:443/")
 }
 
 
